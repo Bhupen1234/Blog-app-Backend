@@ -1,33 +1,37 @@
-const Blog = require("../models/Blog");
-const User = require("../models/User");
+import Blog from "../models/Blog.js";
+import User from "../models/User.js";
 
-const postBlog = async (blog,email)=>{
+
+
+export const postBlogService = async (blog,userId)=>{
 
     try {
-        const {description,userPicturePath} = blog;
-
-    const user = await User.findOne({email});
+        const {description,userPicturePath,title} = blog;
+     
+    const user = await User.findById(userId);
 
     if(!user){
         throw new Error("User not found");
     }
 
-    const blog = new Blog({
+    const newblog = new Blog({
     userId : user._id,
     username : user.username,
     description :description,
     userPicturePath: userPicturePath,
+    title:title,
     comments :[]
     })
 
 
-        await blog.save();
+        await newblog.save();
 
     const blogs = await Blog.find({});
 
     return blogs;
     } catch (error) {
-        
+        console.log(error)
+        throw error;
     }
     
 
@@ -38,10 +42,10 @@ const postBlog = async (blog,email)=>{
 
 
 
-const updateBlog =async(id,blog,email)=>{
+export const updateBlogService =async(id,blog,userId)=>{
    try {
-    const {description,picturePath} = blog;
-    const user = await User.findOne({email});
+    const {description,userPicturePath,title} = blog;
+    const user = await User.findById(userId);
     if(!user){
         throw new Error("User not found");
     }
@@ -50,8 +54,9 @@ const updateBlog =async(id,blog,email)=>{
         userId : user._id,
         username : user.username,
         description :description,
-        userPicturePath: picturePath,
-        comments :[]
+        userPicturePath: userPicturePath,
+        title:title
+      
     }
 
     const updatedBlog = await Blog.findOneAndUpdate({_id:id},{$set:updatedBlogData},{new:true});
@@ -62,7 +67,7 @@ const updateBlog =async(id,blog,email)=>{
    }
 }
 
-const getAllBlogs = async ()=>{
+export const getAllBlogsService = async ()=>{
     try {
         const allBlogs =   await Blog.find({});
         if(allBlogs.length===0){
@@ -76,9 +81,14 @@ const getAllBlogs = async ()=>{
 
 
 
-const deleteBlog = async (id,email)=>{
+export const deleteBlogService = async (id,userId)=>{
     try {
-        const blog = await Blog.findOneAndDelete({_id:id,email:email});
+        const blog = await Blog.findOneAndDelete({_id:id,userId:userId});
+
+        
+        if(!blog){
+            throw new Error("You cannnot delete a blog ");
+        }
 
         return blog;
     } catch (error) {
@@ -87,15 +97,19 @@ const deleteBlog = async (id,email)=>{
 }
 
 
-const updateComment = async (id,email,comments)=>{
+export const updateCommentService = async (id,userId,comments)=>{
     try {
-        const user = await User.findOne({email:email});
+        const user = await User.findById(userId)
         if(!user){
             throw new Error("User not found");
         }
-        const updatedBlog = await Blog.findByIdAndUpdate(id,{comments:[comments]},{new:true})
+        const blog = await Blog.findById(id);
 
-        return updatedBlog;
+         blog.comments.push(comments)
+
+         await blog.save();
+
+        return blog;
 
     } catch (error) {
        throw error; 
@@ -103,4 +117,4 @@ const updateComment = async (id,email,comments)=>{
 }
 
 
-module.exports = {postBlog,updateBlog,getAllBlogs,deleteBlog,updateComment};
+

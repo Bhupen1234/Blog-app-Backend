@@ -1,15 +1,16 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-
-const blogController = require("../controllers/blogController");
-const authenticateToken = require('../middleware/authenticateToken');
-
+import {getAllBlogs,deleteBlog,updateComment} from "../controllers/blogController.js";
+import authenticateToken from '../middleware/authenticateToken.js';
 
 
-router.get("/",authenticateToken,blogController.getAllBlogs);
 
-router.delete("/:id",authenticateToken,blogController.deleteBlog);
-router.patch("/:id/comment",authenticateToken,blogController.updateComment);
+
+
+router.get("/",authenticateToken,getAllBlogs);
+
+router.delete("/:id",authenticateToken,deleteBlog);
+router.patch("/:id/comment",authenticateToken,updateComment);
 
 export default router

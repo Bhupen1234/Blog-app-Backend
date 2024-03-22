@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
-const registerUser =async(userData)=>{
+export const registerUser =async(userData)=>{
     try {
 
         const existingUser = await User.findOne({"email":userData.email});
@@ -22,12 +22,12 @@ const registerUser =async(userData)=>{
 }
 
 
-const loginUser =async(userData)=>{
+export const loginUser =async(userData)=>{
     try {
         let {email,password} = userData;
 
         const user = await User.findOne({email});
-
+         
         if(!user){
             throw new Error("User not found");
         }
@@ -48,4 +48,3 @@ const loginUser =async(userData)=>{
     }
 }
 
-module.exports={registerUser,loginUser}

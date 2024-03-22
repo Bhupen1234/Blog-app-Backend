@@ -43,8 +43,8 @@ const  storage = multer.diskStorage({
 const upload = multer({storage})
 
 //Routes with files
-app.post("/api/blogs/",authenticateToken,upload.single("picture"),blogController.postBlog);
-app.put("/api/blogs/:id",authenticateToken,upload.single("picture"),blogController.updateBlog);
+app.post("/api/blogs/",authenticateToken,upload.single("picture"),postBlog);
+app.put("/api/blogs/:id",authenticateToken,upload.single("picture"),updateBlog);
 
 //Routes
 app.use("/api/users",authRoutes);
