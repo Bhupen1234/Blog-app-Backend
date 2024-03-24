@@ -41,7 +41,7 @@ export const loginUser =async(userData)=>{
 
         const token =  jwt.sign({id:user._id},process.env.JWT_SECRET);
         
-        return {token, "userId": user._id}
+        return {token, "userId": user._id,"username":user.username}
 
     } catch (error) {
         throw error;

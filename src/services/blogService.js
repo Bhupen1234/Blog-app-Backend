@@ -90,7 +90,10 @@ export const deleteBlogService = async (id,userId)=>{
             throw new Error("You cannnot delete a blog ");
         }
 
-        return blog;
+        const blogs = await Blog.find({});
+        return blogs
+
+        
     } catch (error) {
         throw error;
     }
@@ -105,9 +108,9 @@ export const updateCommentService = async (id,userId,comments)=>{
         }
         const blog = await Blog.findById(id);
 
-         blog.comments.push(comments)
+        blog.comments.push({comment:comments,user:user.username})
 
-         await blog.save();
+        await blog.save();
 
         return blog;
 

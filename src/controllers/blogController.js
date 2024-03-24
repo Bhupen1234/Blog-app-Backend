@@ -39,9 +39,9 @@ export const updateBlog = async (req,res)=>{
 export const deleteBlog= async (req,res)=>{
     try {
         const {id} = req.params;
-        await deleteBlogService(id,req.user.id);
+      const blogs =  await deleteBlogService(id,req.user.id);
 
-        res.status(200).json({message:"Blog Deleted"});
+        res.status(200).json(blogs);
     } catch (error) {
         res.status(500).json({message:error.message});
     }

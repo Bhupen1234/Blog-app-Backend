@@ -17,11 +17,12 @@ export const register = async(req,res)=>{
 export const login =async (req, res)=>{
     try {
         const userData = req.body;
-        const {token,userId} = await loginUser(userData);
+        const {token,userId,username} = await loginUser(userData);
 
         res.status(200).json({
             token,
-            userId
+            userId,
+            username
         })
 
     } catch (error) {
